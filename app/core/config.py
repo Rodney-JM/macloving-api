@@ -6,6 +6,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
+    # Storage
+    STORAGE_BACKEND: str = "local"
+    UPLOAD_DIR: str = "./uploads"
+    
     class Config:
         env_file = ".env"
 
