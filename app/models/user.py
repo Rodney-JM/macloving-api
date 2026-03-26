@@ -17,7 +17,13 @@ class User(Base):
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True, server_default=func.now())
     )
-    is_active: Mapped[bool]
+    updated_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True),
+        onupdate=func.now()
+    )
+    
+    is_active: Mapped[bool] = mapped_column(default=True)
+    is_verified: Mapped[bool] = mapped_column(default=False)
     
     couples: Mapped[list["CoupleMember"]] = relationship(back_populates="user")
     
