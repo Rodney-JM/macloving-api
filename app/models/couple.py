@@ -30,7 +30,7 @@ class Couple(Base):
     )
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
-        server_default=func.now()
+        server_default=func.now(),
         onupdate=func.now()
     )
     
@@ -42,3 +42,7 @@ class Couple(Base):
     is_active: Mapped[bool] = mapped_column(default=True)
     
     members: Mapped[list["CoupleMember"]] = relationship(back_populates="couple")
+    
+    @property
+    def partner_ids(self) -> list[str]:
+        return [m.user_id for m in self.members]

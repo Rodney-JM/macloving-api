@@ -13,6 +13,9 @@ class CoupleMember(Base):
     # Estrutura do banco mesmo
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     couple_id: Mapped[str] = mapped_column(ForeignKey("couples.id"))
+    joined_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
     
     # Objetos pra ajd no Python
     user: Mapped["User"] = relationship(back_populates="couples")
