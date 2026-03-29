@@ -26,7 +26,8 @@ class Couple(Base):
     )
     
     created_at: Mapped[DateTime] = mapped_column(
-        DateTime(timezone=True, server_default=func.now())
+        DateTime(timezone=True),
+        server_default=func.now()
     )
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
