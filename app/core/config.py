@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 6
     
     #cors
     ALLOWED_ORIGINS: str = "http://localhost:3000"
@@ -27,6 +28,7 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "./uploads"
     MAX_UPLOAD_SIZE_MB: int = 10
     ALLOWED_IMAGE_TYPES: str = "image/jpeg,image/png,image/webp,image/jpg"
+    ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "webp"}
     
     @property
     def allowed_image_type_list(self)-> list[str]:
