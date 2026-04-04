@@ -15,11 +15,13 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(255))
     avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[DateTime] = mapped_column(
-        DateTime(timezone=True, server_default=func.now())
+        DateTime(timezone=True),
+        server_default=func.now()
     )
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
-        onupdate=func.now()
+        onupdate=func.now(),
+        server_default=func.now()
     )
     
     is_active: Mapped[bool] = mapped_column(default=True)
@@ -27,4 +29,4 @@ class User(Base):
     
     couples: Mapped[list["CoupleMember"]] = relationship(back_populates="user")
     
-    albums: Mapped[list["AlbumMember"]] = relationship(back_populates="user")
+    albums: Mapped[list["Album"]] = relationship(back_populates="user")

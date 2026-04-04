@@ -5,7 +5,7 @@ import os
 
 class Settings(BaseSettings):
     #app
-    APP_NAME = str = "Mac Lovers"
+    APP_NAME: str = "Mac Lovers"
     APP_ENV: Literal["development", "production"] = "development"
     DEBUG: bool = False
     API_V1_PREFIX: str = "/api/v1"
@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     
     @property
     def allowed_image_type_list(self)-> list[str]:
-        return [t.strip for t in self.ALLOWED_IMAGE_TYPES.split(",")]
+        return [t.strip() for t in self.ALLOWED_IMAGE_TYPES.split(",")]
     
     @property
     def max_upload_bytes(self) -> int:

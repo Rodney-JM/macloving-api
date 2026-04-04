@@ -28,3 +28,4 @@ class Album(Base):
     memories: Mapped[list["Memory"]] = relationship(
         back_populates="album", cascade="all, delete-orphan"
     )
+    user: Mapped["User"] = relationship(back_populates="albums")
