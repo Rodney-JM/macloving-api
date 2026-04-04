@@ -1,6 +1,7 @@
 from app.db.database import Base
-from sqlalchemy import String, DateTime, func, ForeignKey
+from sqlalchemy import String, DateTime, func, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, relationship, mapped_column
+from app.enums.member_role import MemberRole
 import uuid
 
 class CoupleMember(Base):
@@ -13,6 +14,11 @@ class CoupleMember(Base):
     # Estrutura do banco mesmo
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     couple_id: Mapped[str] = mapped_column(ForeignKey("couples.id"))
+    
+    role: Mapped[MemberRole] = mapped_column(
+        Enum(MemberRole), default=MemberRole.partner
+    )
+    
     joined_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
