@@ -19,11 +19,11 @@ class Couple(Base):
     )
     
     cover_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    invite_code: Mapped[str] = mapped_column(
+    """ invite_code: Mapped[str] = mapped_column(
         String(20),
         unique=True, 
         default=lambda: str(uuid.uuid4())[:8]
-    )
+    ) """
     
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
