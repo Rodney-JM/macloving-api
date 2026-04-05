@@ -23,6 +23,11 @@ class Memory(Base):
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+    updated_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now()
+    )
     
     album: Mapped["Album"] = relationship(back_populates="memories")
     author: Mapped["User"] = relationship()
