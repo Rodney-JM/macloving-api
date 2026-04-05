@@ -54,7 +54,6 @@ app/
 ## ⚠️ Status do projeto
 
 Esse projeto ainda está no início do desenvolvimento.
-Estou focando em:
 
 ## 🎯 Próximos passos
 
