@@ -1,6 +1,6 @@
 # 💙 MacLoving - Backend
 
-Backend do projeto **MacLoving**, uma plataforma pensada para casais criarem e guardarem memórias juntos através de álbuns digitais.
+Backend do projeto **Mac Loving**, uma plataforma pensada para casais em relacionamento à distância viverem o cotidiano juntos, mesmo estando fisicamente separados.
 
 > 🚧 Projeto em desenvolvimento — ainda em fase inicial (MVP)
 
@@ -8,13 +8,21 @@ Backend do projeto **MacLoving**, uma plataforma pensada para casais criarem e g
 
 ## ✨ Sobre o projeto
 
-O MacLoving é um SaaS que permite que casais:
+O Mac Loving é um SaaS que busca resolver uma dor comum:
+a dificuldade de manter a sensação de presença e conexão emocional em relacionamentos à distância.
 
-* 📸 Criem álbuns de fotos
-* 💭 Guardem momentos especiais
-* ❤️ Registrem memórias importantes juntos
+Diferente de aplicativos tradicionais de casal, o foco não é apenas guardar memórias, mas sim criar uma experiência onde o casal possa compartilhar o dia a dia em tempo real.
 
-Este repositório contém o backend da aplicação, responsável por autenticação, gerenciamento de dados e lógica de negócio.
+Com o Mac Loving, casais poderão:
+
+🟢 Compartilhar presença e status em tempo real (o que estão fazendo/sentindo)
+💭 Criar rituais diários de conexão
+🎬 Viver experiências sincronizadas (como assistir algo juntos)
+🌙 Simular momentos do cotidiano, como “ir dormir juntos”
+💌 Enviar interações com valor emocional (mensagens programadas, surpresas)
+📸 Registrar memórias em álbuns compartilhados (feature complementar)
+
+Este repositório contém o backend da aplicação, responsável por autenticação, lógica de negócio, comunicação em tempo real e persistência de dados.
 
 ---
 
