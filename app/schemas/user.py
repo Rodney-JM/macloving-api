@@ -1,32 +1,47 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, field_validator
 from datetime import datetime
+import bleach
 
-
-class UserBase(BaseModel):
-    name: str = Field(min_length=1, max_length=100)
+class UserRegister(BaseModel):
+    name: str
     email: EmailStr
-
-
-class UserCreate(UserBase):
-    password: str = Field(min_length=6, max_length=100)
-
-
+    password: str
+    
+    @field_validator("name")
+    @classmethod
+    def sanitize_name(self, v: str)-> str:
+        v = bleach.clean(v.strip())
+        if len(v) < 2 or len(v) > 100:
+            raise ValueError("Nome deve ter entre 2 e 100 caracteres")
+        return v
+    
+    @field_validator("password")
+    @classmethod
+    def validate_password(self, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError("A senha deve conter pelo menos 8 caracteres")
+        if not any(c.isupper() for c in v):
+            raise ValueError("A senha deve conter ao menos uma letra maiúscula")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("A senha deve ter ao menos um número")
+        return v
+       
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
-
-
-class UserUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=100)
-    avatar_url: str | None = Field(default=None, max_length=500)
-
-
-class UserResponse(UserBase):
+    
+class UserResponse(BaseModel):
     id: str
+    name: str
+    email: str
     avatar_url: str | None
-    is_active: bool
-    is_verified: bool
     created_at: datetime
-    updated_at: datetime | None
-
     model_config = {"from_attributes": True}
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
