@@ -3,8 +3,8 @@ from app.repositories.album_repo import AlbumRepository
 from app.repositories.couple_repo import CoupleRepository
 from app.models.album import Album
 from app.core.exceptions import NotFoundError, ForbiddenError
-from app.schemas.common import PaginatedResponse
-from app.schemas.album import AlbumResponse
+from app.application.schemas.common import PaginatedResponse
+from app.application.schemas.album import AlbumResponse
 
 class AlbumService:
     def __init__(self, db: Session):

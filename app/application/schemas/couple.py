@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from app.schemas.user import UserResponse
+from app.application.schemas.user import UserResponse
 
 class CoupleResponse(BaseModel):
     id: str
