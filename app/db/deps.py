@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+""" from sqlalchemy.orm import Session
 from app.core.config import settings
 from typing import Generator
 from app.db.database import SessionLocal
@@ -30,4 +30,4 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer_
     if not user or not user.is_active:
         raise UnauthorizedError("Usuário não encontrado ou inativo.")
     
-    return user
+    return user """
