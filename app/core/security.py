@@ -1,11 +1,17 @@
 import secrets
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+from typing import Optional, Any
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from app.core.config import settings
+from uuid import UUID
+import bleach
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+_ALLOWED_TAGS: list[str] = []
+_ALLOWED_ATTRS: dict = {}
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -13,7 +19,16 @@ def hash_password(password: str) -> str:
 def verify_password(plain: str, hashed: str) -> bool:
     return pwd_context.verify(plain, hashed)
 
-def _create_token(subject: str, expires_delta: timedelta, token_type: str) -> str:
+def sanitize_input(value: str) -> str:
+    return bleach.clean(value, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS, strip=True)
+
+
+def _create_token(
+    subject: str | UUID,
+    expires_delta: timedelta,
+    token_type: str,
+    extra_claims: dict[str, Any] | None = None
+) -> str:
     now = datetime.now(timezone.utc)
     expire = now + (expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
     payload = {
@@ -22,12 +37,17 @@ def _create_token(subject: str, expires_delta: timedelta, token_type: str) -> st
         "iat": now,
         "type": token_type
     }
+    if extra_claims:
+        payload.update(extra_claims)
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
     
-def create_access_token(subject: str, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(subject: str | UUID, couple_id: UUID | None = None , expires_delta: Optional[timedelta] = None) -> str:
+    extra = dict[str, Any] = {}
+    if couple_id: 
+        extra["couple_id"] = str(couple_id)
     expires = expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    return _create_token(subject, expires, "access")
+    return _create_token(subject, expires, "access", extra_claims=extra)
     
 def create_refresh_token(subject: str) -> str:
     expires = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
@@ -70,3 +90,14 @@ def generate_secure_filename(original_file_name: str) -> str:
     random_name = secrets.token_urlsafe(16)
     
     return f"{random_name}.{ext}" if ext else random_name
+
+
+#getting users
+def get_user_id_from_token(token: str) -> UUID:
+    payload = verify_token(token, token_type="access")
+    return UUID(payload["sub"])
+
+def get_couple_id_from_token(token: str)-> UUID| None:
+    payload = verify_token(token, token_type="access")
+    raw = payload.get("couple_id")
+    return UUID(raw) if raw else None
