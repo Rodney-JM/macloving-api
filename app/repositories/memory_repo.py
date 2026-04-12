@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.memory import Memory
+from app.domain.models.memory import Memory
 
 class MemoryRepository:
     def __init__(self, db: Session):

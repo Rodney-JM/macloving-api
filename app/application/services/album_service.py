@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.repositories.album_repo import AlbumRepository
 from app.repositories.couple_repo import CoupleRepository
-from app.models.album import Album
+from app.domain.models.album import Album
 from app.core.exceptions import NotFoundError, ForbiddenError
 from app.application.schemas.common import PaginatedResponse
 from app.application.schemas.album import AlbumResponse

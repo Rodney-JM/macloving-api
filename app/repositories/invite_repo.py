@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session
-from app.models.invite import Invite 
+from app.domain.models.invite import Invite 
 
 class InviteRepository:
     def __init__(self, db: Session):

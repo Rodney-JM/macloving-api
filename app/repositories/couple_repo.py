@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
-from app.models.couple import Couple
-from app.models.couple_member import CoupleMember, MemberRole
+from app.domain.models.couple import Couple
+from app.domain.models.couple_member import CoupleMember, MemberRole
 
 class CoupleRepository:
     def __init__(self, db: Session):

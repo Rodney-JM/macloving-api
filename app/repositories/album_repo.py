@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.album import Album
+from app.domain.models.album import Album
 
 class AlbumRepository:
     def __init__(self, db: Session):
