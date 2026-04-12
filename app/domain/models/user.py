@@ -1,7 +1,10 @@
 from sqlalchemy import String, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
-from app.db.database import Base
+from app.infra.db.database import Base
+
+from app.domain.enums.mood_type import MoodType
+
 import uuid
 
 class User(Base):

@@ -1,4 +1,4 @@
-from db.database import Base
+from app.infra.db.database import Base
 from app.domain.enums.relationship_status import RelationshipStatus
 from app.domain.enums.subscription_status import SubscriptionStatus
 from sqlalchemy import ForeignKey, func, String, DateTime, Enum

@@ -1,6 +1,6 @@
 from sqlalchemy import String, Text, DateTime, Date, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.db.database import Base
+from app.infra.db.database import Base
 import uuid
 
 class Memory(Base):

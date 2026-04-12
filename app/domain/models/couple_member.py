@@ -1,4 +1,4 @@
-from app.db.database import Base
+from app.infra.db.database import Base
 from sqlalchemy import String, DateTime, func, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from app.domain.enums.member_role import MemberRole
