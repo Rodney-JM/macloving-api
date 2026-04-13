@@ -1,36 +1,56 @@
-from sqlalchemy import String, DateTime, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
-from app.infra.db.database import Base
+from app.infra.db.base import (
+    Base,
+    TimestampMixin,
+    UUIDMixin
+)
+from datetime import datetime
 
 from app.domain.enums.mood_type import MoodType
 
 import uuid
 
-class User(Base):
+class User(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "users"
-    
-    id: Mapped[str] = mapped_column(
-       String(36), primary_key=True, default=lambda: str(uuid.uuid4()) 
+    __table_args__ = (
+        Index("ix_users_email", "email", unique=True),
+        Index("ix_users_couple_id", "couple_id")
     )
-    
-    name: Mapped[str] = mapped_column(String(100))
-    email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
-    password_hash: Mapped[str] = mapped_column(String(255))
+    name: Mapped[str] = mapped_column(String(80), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    created_at: Mapped[DateTime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now()
+    
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    
+    current_mood: Mapped[MoodType | None] = mapped_column(
+        String(30), nullable=True
     )
-    updated_at: Mapped[DateTime] = mapped_column(
-        DateTime(timezone=True),
-        onupdate=func.now(),
-        server_default=func.now()
+    mood_updated_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    couple_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("couples.id", ondelete="SET NULL"),
+        nullable=True
     )
     
-    is_active: Mapped[bool] = mapped_column(default=True)
-    is_verified: Mapped[bool] = mapped_column(default=False)
+    couples: Mapped["Couple"] = relationship(
+        "Couple",
+        foreign_keys=[couple_id],
+        back_populates="members"
+    )
     
-    couples: Mapped[list["CoupleMember"]] = relationship(back_populates="user")
+    refresh_tokens: Mapped[list["RefreshToken"]] = relationship(
+        "RefreshToken",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
     
-    albums: Mapped[list["Album"]] = relationship(back_populates="user")
+    albums: Mapped[list["Album"]] = relationship(
+        "Album",
+        back_populates="user"
+    )
