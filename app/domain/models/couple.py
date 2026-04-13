@@ -42,7 +42,6 @@ class Couple(Base):
     subscription_expires_at: Mapped[DateTime | None] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True)
     
-    members: Mapped[list["CoupleMember"]] = relationship(back_populates="couple")
     
     @property
     def partner_ids(self) -> list[str]:
