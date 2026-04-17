@@ -13,7 +13,7 @@ a dificuldade de manter a sensação de presença e conexão emocional em relaci
 
 Diferente de aplicativos tradicionais de casal, o foco não é apenas guardar memórias, mas sim criar uma experiência onde o casal possa compartilhar o dia a dia em tempo real.
 
-Com o Mac Loving, casais poderão:
+Com o Mac Loving, casais serão capazes:
 
 🟢 Compartilhar presença e status em tempo real (o que estão fazendo/sentindo)
 💭 Criar rituais diários de conexão
