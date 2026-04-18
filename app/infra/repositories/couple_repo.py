@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from app.domain.models.couple import Couple
+from app.domain.models.couple_models.couple import Couple
 from app.domain.models.couple_member import CoupleMember, MemberRole
 
 class CoupleRepository:
