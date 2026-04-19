@@ -13,7 +13,7 @@ class AuditLog(Base, UUIDMixin):
     __tablename__ = "audit_logs"
     __table_args__ = (
         Index("ix_audit_logs_user_id", "user_id"),
-        Index("ix_audit_logs_couple_id", "couple_id")
+        Index("ix_audit_logs_couple_id", "couple_id"),
         Index("ix_audit_logs_created_at", "created_at")
     )
     

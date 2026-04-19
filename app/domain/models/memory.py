@@ -1,4 +1,4 @@
-from sqlalchemy import String, Text, DateTime, Date, ForeignKey, func
+""" from sqlalchemy import String, Text, DateTime, Date, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.infra.db.database import Base
 import uuid
@@ -30,4 +30,4 @@ class Memory(Base):
     )
     
     album: Mapped["Album"] = relationship(back_populates="memories")
-    author: Mapped["User"] = relationship()
+    author: Mapped["User"] = relationship() """
