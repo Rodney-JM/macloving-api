@@ -54,3 +54,6 @@ class User(Base, UUIDMixin, TimestampMixin):
         "Album",
         back_populates="user"
     )
+    
+    def __repr__(self) -> str:
+        return f"<User {self.email}>"

@@ -18,7 +18,7 @@ class Ritual(Base, UUIDMixin, TimestampMixin):
     
     couple_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("couples.id", ondelete="CASCADE")
+        ForeignKey("couples.id", ondelete="CASCADE"),
         nullable=False
     )
     created_by: Mapped[uuid.UUID] = mapped_column(
