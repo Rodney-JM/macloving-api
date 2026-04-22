@@ -2,7 +2,7 @@ from sqlalchemy import String, ForeignKey, func, DateTime, BigInteger, Text, Ind
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.domain.enums.album_category import AlbumCategory
+from app.domain.enums.memory_category import AlbumCategory
 from app.infra.db.base import(
     Base,
     TimestampMixin,
@@ -11,14 +11,13 @@ from app.infra.db.base import(
 
 import uuid
 
-class AlbumPhoto(Base, UUIDMixin, TimestampMixin):
-    __tablename__ = "album_photos"
+class Album(Base, UUIDMixin, TimestampMixin):
+    __tablename__ = "albums"
     
-    __table_args = (
-        Index("ix_album_photos_couple_id", "couple_id"),
-        Index("ix_album_photos_uploaded_by", "uploaded_by"),
-        Index("ix_album_photos_category", "category"),
-        Index("ix_album_photos_couple_created", "couple_id", "created_at")
+    __table_args__ = (
+        Index("ix_albums_couple_id", "couple_id"),
+        Index("ix_albums_created_by", "created_by"),
+        Index("ix_albums_cover_memory_id", "cover_memory_id")
     )
     
     couple_id: Mapped[uuid.UUID] = mapped_column(
@@ -26,28 +25,25 @@ class AlbumPhoto(Base, UUIDMixin, TimestampMixin):
         ForeignKey("couples.id", ondelete="CASCADE"),
         nullable=False
     )
-    uploaded_by: Mapped[uuid.UUID] = mapped_column(
+    created_by: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True
     )
-    
-    #s3ref
-    s3_key: Mapped[str] = mapped_column(String(512), nullable=False)
-    s3_thumbnail_key: Mapped[str | None] = mapped_column(String(512), nullable=True)
-    
-    #metadata
-    original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
-    caption: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    category: Mapped[AlbumCategory] = mapped_column(
-        String(30), default=AlbumCategory.OTHER, nullable=False
+    title: Mapped[str] = mapped_column(
+        String(150), 
+        nullable=False
     )
-    file_size_bytes: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    width: Mapped[int | None] = mapped_column(nullable=True)
-    height: Mapped[int | None] = mapped_column(nullable=True)
-    taken_at: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True
+    )
+    cover_memory_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("memories.id", ondelete="SET NULL"),
+        nullable=True
+    )
     
-    uploader: Mapped["User"] = relationship("User", foreign_keys=[uploaded_by])
+    cover_memory: Mapped["Memory"] = relationship("Memory", foreign_keys=[cover_memory_id])
     
-    def __repr__(self) -> str:
-        return f"<AlbumPhoto {self.original_filename}"
+    creator: Mapped["User"] = relationship("User", foreign_keys=[created_by], back_populates="albums_created")

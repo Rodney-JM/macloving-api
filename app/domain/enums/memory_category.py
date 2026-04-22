@@ -1,6 +1,6 @@
 import enum
 
-class AlbumCategory(str, enum.Enum):
+class MemoryCategory(str, enum.Enum):
     TRAVEL = "travel"
     ROUTINE = "routine"
     ANNIVERSARY = "anniversary"
