@@ -1,22 +1,27 @@
-from sqlalchemy.orm import Session
-from app.domain.models.user import User
+from uuid import UUID
+from sqlalchemy import select
 
-class UserRepository:
-    def __init__(self, db: Session):
-        self.db = db
+from app.domain.models.user import User
+from app.infra.repositories.base import BaseRepository
+
+class UserRepository(BaseRepository[User]):
+    model = User
+    
+    async def get_by_email(self, email: str) -> User | None:
+        result = await self.session.execute(
+            select(User).where(User.email== email.lower())
+        )
         
-    def get_by_id(self, user_id: str) -> User | None:
-        return self.db.get(User, user_id)
+        return result.scalar_one_or_none()
     
-    def get_by_email(self, email: str) -> User | None:
-        return self.db.query(User).filter(User.email == email).first()
-    
-    def email_exists(self, email: str) ->bool:
-        return self.db.query(User.id).filter(User.email == email).first() is not None
-    
-    def create(self, name: str, email: str, password_hash: str) -> User:
-        user = User(name=name, email=email, password_hash=password_hash)
-        self.db.add(user)
-        self.db.commit()
-        self.db.refresh(user)
-        return user
+    async def get_couple_partner(self, user: User) -> User | None:
+        if not user.couple_id:
+            return None
+        result = await self.session.execute(
+            select(User).where(
+                User.couple_id == user.couple_id,
+                User.id != user.id
+            )
+        )
+        
+        return result.scalar_one_or_none()

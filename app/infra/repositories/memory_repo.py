@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+""" from sqlalchemy.orm import Session
 from app.domain.models.memory import Memory
 
 class MemoryRepository:
@@ -35,4 +35,4 @@ class MemoryRepository:
     
     def delete(self, memory: Memory) -> None:
         self.db.delete(memory)
-        self.db.commit()
+        self.db.commit() """

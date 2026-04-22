@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+""" from sqlalchemy.orm import Session
 from app.domain.models.album import Album
 
 class AlbumRepository:
@@ -33,4 +33,4 @@ class AlbumRepository:
     
     def delete(self, album: Album) -> None:
         self.db.delete(album)
-        self.db.commit()
+        self.db.commit() """
