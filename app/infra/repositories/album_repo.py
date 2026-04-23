@@ -10,7 +10,6 @@ class AlbumRepository(BaseRepository[Album]):
         self,
         couple_id: UUID,
         *,
-        category: str | None = None,
         limit: int = 30,
         offset: int = 0
     ) -> tuple[list[Album], int]:
