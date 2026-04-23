@@ -15,9 +15,7 @@ class AlbumRepository(BaseRepository[Album]):
         offset: int = 0
     ) -> tuple[list[Album], int]:
         filters = [Album.couple_id==couple_id]
-        if category:
-            filters.append(Album.category == category)
-            
+        
         items = await self.get_all(
             filters=filters,
             order_by=Album.created_at.desc(),

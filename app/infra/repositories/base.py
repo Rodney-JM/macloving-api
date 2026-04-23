@@ -47,6 +47,14 @@ class BaseRepository(Generic[ModelT]):
         await self.session.refresh(instance)
         return instance
     
+    async def update(self, instance: ModelT, data: dict) -> ModelT:
+        for k, v in data.items():
+            if v is not None:
+                setattr(instance, k, v)
+        await self.session.flush()
+        await self.session.refresh(instance)
+        return instance
+    
     async def delete(self, instance: ModelT) -> None:
         await self.session.delete(instance)
         await self.session.flush()

@@ -1,6 +1,7 @@
 import uuid
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import String, Text, DateTime, Date, ForeignKey, func, Index, BigInteger
+from sqlalchemy import String, Text, DateTime, Date, ForeignKey, func, Index, BigInteger, Enum, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.infra.db.base import (
     Base, 
@@ -25,7 +26,7 @@ class Memory(Base, UUIDMixin, TimestampMixin):
     author_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="SET NULL"),
-        nullable=False
+        nullable=True
     )
     couple_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -49,12 +50,12 @@ class Memory(Base, UUIDMixin, TimestampMixin):
     original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
     caption: Mapped[str | None] = mapped_column(String(500), nullable=True)
     category: Mapped[MemoryCategory] = mapped_column(
-        String(30), default=MemoryCategory.OTHER, nullable=False
+        Enum(MemoryCategory), default=MemoryCategory.OTHER, nullable=False
     )
     file_size_bytes: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    width: Mapped[int | None] = mapped_column(nullable=True)
-    height: Mapped[int | None] = mapped_column(nullable=True)
-    taken_at: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    width: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    height: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    taken_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     
     album: Mapped["Album"] = relationship(back_populates="memories", foreign_keys=[album_id])
     author: Mapped["User"] = relationship(back_populates="memories", foreign_keys=[author_id])

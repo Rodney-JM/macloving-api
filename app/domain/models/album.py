@@ -25,7 +25,7 @@ class Album(Base, UUIDMixin, TimestampMixin):
         ForeignKey("couples.id", ondelete="CASCADE"),
         nullable=False
     )
-    created_by: Mapped[uuid.UUID] = mapped_column(
+    created_by: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True
@@ -45,5 +45,6 @@ class Album(Base, UUIDMixin, TimestampMixin):
     )
     
     cover_memory: Mapped["Memory"] = relationship("Memory", foreign_keys=[cover_memory_id])
+    memories: Mapped[list["Memory"]] = relationship("Memory", back_populates="album", cascade="all, delete-orphan")
     
     creator: Mapped["User"] = relationship("User", foreign_keys=[created_by], back_populates="albums_created")
