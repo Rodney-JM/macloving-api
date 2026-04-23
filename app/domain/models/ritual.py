@@ -1,7 +1,7 @@
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import Boolean, Date, ForeignKey, Index, Integer, String, Text
+from sqlalchemy import Boolean, Date, ForeignKey, Index, Integer, String, Text, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -44,3 +44,30 @@ class Ritual(Base, UUIDMixin, TimestampMixin):
     
     def __repr__(self) -> str:
         return f"<Ritual '{self.title}'>"
+    
+class RitualEntry(Base, UUIDMixin, TimestampMixin):
+    __tablename__ = "ritual_entries"
+    __table_args__ = (
+        Index("ix_ritual_entries_ritual_date", "ritual_id", "entry_date"),
+        Index("ix_ritual_entries_user_date", "user_id", "entry_date")
+    )
+    
+    ritual_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("rituals.id", ondelete="CASCADE"),
+        nullable=False
+    )
+    
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False
+    )
+    
+    entry_date: Mapped[date] = mapped_column(Date, nullable=False)
+    status: Mapped[RitualStatus] = mapped_column(
+        Enum(RitualStatus), default=RitualStatus.COMPLETED, nullable=False
+    )
+    note: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    ritual: Mapped[Ritual] = relationship("Ritual", back_populates="entries")
+    user: Mapped["User"] = relationship("User")
