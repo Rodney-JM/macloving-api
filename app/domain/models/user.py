@@ -38,6 +38,10 @@ class User(Base, UUIDMixin, TimestampMixin):
         nullable=True
     )
     
+    stripe_customer_id: Mapped[str | None] = mapped_column(
+        String(64), nullable=True, unique=True
+    )
+    
     couples: Mapped["Couple"] = relationship(
         "Couple",
         foreign_keys=[couple_id],

@@ -14,10 +14,8 @@ def setup_logging() -> None:
         structlog.stdlib.add_logger_name,
     ]
     
-    if settings.LOG_FORMAT == "json":
-        renderer = structlog.processors.JSONRenderer()
-    else:
-        renderer = structlog.dev.ConsoleRenderer(colors=True)
+    renderer = structlog.dev.ConsoleRenderer(colors=True) if not settings.is_production \
+        else structlog.processors.JSONRenderer()
         
     structlog.configure(
         processors=shared_processors + [

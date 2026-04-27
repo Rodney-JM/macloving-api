@@ -1,7 +1,9 @@
 import enum
 
 class SubscriptionStatus(enum.Enum):
-    free = "free"
-    active = "active"
-    canceled = "canceled"
-    expired = "expired"
+    TRIALING = "trialing"
+    ACTIVE = "active"
+    PAST_DUE = "past_due"
+    CANCELED = "canceled"
+    UNPAID = "unpaid"
+    INCOMPLETE = "incomplete"

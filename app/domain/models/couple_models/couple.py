@@ -1,6 +1,6 @@
 from app.domain.enums.relationship_status import RelationshipStatus
 from app.domain.enums.subscription_status import SubscriptionStatus
-from sqlalchemy import ForeignKey, func, String, DateTime, Boolean, Enum
+from sqlalchemy import ForeignKey, func, String, DateTime, Boolean, Enum, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infra.db.base import (
@@ -12,6 +12,7 @@ import uuid
 
 class Couple(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "couples"
+    __table_args__ = (Index("ix_couples_invite_code", "invite_code", unique=True))
     
     invite_code: Mapped[str] = mapped_column(
         String(12), unique=True, nullable=False, index=True
