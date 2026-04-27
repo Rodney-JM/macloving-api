@@ -92,10 +92,34 @@ class StorageError(AppException):
         )
         
 #rate limit 
-
 class RateLimitError(AppException):
     def __init__(self):
         super().__init__(
             detail="Muitas requisições. Tente novamente em breve",
             status_code=status.HTTP_429_TOO_MANY_REQUESTS
         )
+        
+#Subscription
+
+class PremiumRequiredError(AppException):
+    def __init__(self, feature: str = "essa funcionalidade"):
+        super().__init__(
+            f"O plano Premium é necessário para usar {feature}."
+            "Faça upgrade em Configurações -> Assinatura.",
+            status.HTTP_402_PAYMENT_REQUIRED
+        )
+
+class SubscriptionLimitError(AppException):
+    def __init__(self, detail: str):
+        super().__init__(detail, status.HTTP_402_PAYMENT_REQUIRED)
+
+class ActiveSubscriptionError(AppException):
+    def __init__(self):
+        super().__init__(
+            "Você já possui uma assinatura ativa. Gerencie-a pelo portal do cliente.",
+            status.HTTP_409_CONFLICT
+        )
+
+class StripeWebhookError(AppException):
+    def __init__(self, detail: str = "Webhook inválido"):
+        super().__init__(detail, status.HTTP_400_BAD_REQUEST)
