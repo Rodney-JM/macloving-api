@@ -88,6 +88,22 @@ class Settings(BaseSettings):
     #sentry
     SENTRY_DNS: str = ""
     
+    # stripe
+    STRIPE_SECRET_KEY: str = ""
+    STRIPE_WEBHOOK_SECRET: str = ""
+    STRIPE_PUBLISHABLE_KEY: str = ""
+    
+    #prices id
+    STRIPE_PRICE_PREMIUM_MONTHLY: str = ""
+    STRIPE_PRICE_PREMIUM_YEARLY: str = ""
+    
+    #free trial period
+    STRIPE_TRIAL_DAYS: int = 7
+    
+    #redirect targets after checkout
+    STRIPE_SUCCESS_URL: str = "http://localhost:3000/subscription/success"
+    STRIPE_CANCEL_URL: str = "http://localhost:3000/subscription/cancel"
+    
     #logs
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: Literal["json", "console"] = "json"
