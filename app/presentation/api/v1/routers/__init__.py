@@ -8,6 +8,7 @@ from app.presentation.api.v1.routers.album import router as album_router
 from app.presentation.api.v1.routers.dashboard import router as dashboard_router
 from app.presentation.api.v1.routers.memory import router as memory_router
 from app.presentation.api.v1.routers.night import router as night_router
+from app.presentation.api.v1.routers.ritual import router as ritual_router
 
 v1_router = APIRouter()
 
@@ -20,5 +21,6 @@ v1_router.include_router(album_router)
 v1_router.include_router(dashboard_router)
 v1_router.include_router(memory_router)
 v1_router.include_router(night_router)
+v1_router.include_router(ritual_router)
 
 __all__ = ["v1_router"]
