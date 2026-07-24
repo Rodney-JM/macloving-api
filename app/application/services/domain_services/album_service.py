@@ -70,6 +70,21 @@ class AlbumService:
             has_next=(offset + len(items)) < total,
         )
 
+    async def list_albums(
+        self, user: User, *, page: int = 1, page_size: int = 30
+    ) -> PaginatedResponse[AlbumResponse]:
+        offset = (page - 1) * page_size
+        items, total = await self.album_repo.get_by_couple_paginated(
+            user.couple_id, limit=page_size, offset=offset
+        )
+        return PaginatedResponse(
+            items=[self._to_response(a) for a in items],
+            total=total,
+            page=page,
+            page_size=page_size,
+            has_next=(offset + len(items)) < total,
+        )
+
     async def get_recent(self, user: User, limit: int = 5) -> list[AlbumResponse]:
         items = await self.album_repo.get_all(
             filters=[Album.couple_id == user.couple_id],

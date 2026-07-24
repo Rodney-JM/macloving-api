@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel, field_validator, Field
 from datetime import date, datetime
 from app.core.security import sanitize_input
@@ -54,12 +56,14 @@ class MemoryResponse(BaseModel):
     media_url: str | None = None
     thumbnail_url: str | None = None
     media_type: str | None = None
+    category: str | None = None
     created_at: datetime 
     updated_at: datetime
     
     model_config = {"from_attributes": True}
     
 class MemoryUploadRequest(BaseModel):
+    album_id: UUID
     caption: str | None = Field(None, max_length=500)
     category: MemoryCategory = MemoryCategory.OTHER
     
