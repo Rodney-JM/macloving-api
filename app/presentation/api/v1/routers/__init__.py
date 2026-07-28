@@ -9,6 +9,8 @@ from app.presentation.api.v1.routers.dashboard import router as dashboard_router
 from app.presentation.api.v1.routers.memory import router as memory_router
 from app.presentation.api.v1.routers.night import router as night_router
 from app.presentation.api.v1.routers.ritual import router as ritual_router
+from app.presentation.api.v1.routers.surprise import router as surprise_router
+from app.presentation.api.v1.routers.special_date import router as special_date_router
 
 v1_router = APIRouter()
 
@@ -22,5 +24,7 @@ v1_router.include_router(dashboard_router)
 v1_router.include_router(memory_router)
 v1_router.include_router(night_router)
 v1_router.include_router(ritual_router)
+v1_router.include_router(surprise_router)
+v1_router.include_router(special_date_router)
 
 __all__ = ["v1_router"]

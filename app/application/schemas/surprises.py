@@ -15,6 +15,15 @@ class SurpriseCreateRequest(BaseModel):
     @classmethod
     def clean(cls, v: str | None) -> str | None:
         return sanitize_input(v.strip()) if v else None
+
+class SurpriseUpdateRequest(BaseModel):
+    title: str | None = Field(None, min_length=2, max_length=150)
+    message: str | None = Field(None, max_length=300)
+
+    @field_validator("title", "message", mode="before")
+    @classmethod
+    def clean(cls, v: str | None) -> str | None:
+        return sanitize_input(v.strip()) if v else None
     
 class SurpriseResponse(BaseModel):
     id: UUID

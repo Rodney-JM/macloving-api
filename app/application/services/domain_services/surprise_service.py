@@ -1,10 +1,15 @@
 from uuid import UUID
 from datetime import datetime, timezone
 
+from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from app.application.schemas.surprises import SurpriseCreateRequest, SurpriseResponse
+from app.application.schemas.surprises import (
+    SurpriseCreateRequest,
+    SurpriseResponse,
+    SurpriseUpdateRequest,
+)
 from app.application.schemas.common import PaginatedResponse
 from app.core.exceptions import (
     ForbiddenError,
@@ -17,7 +22,7 @@ from app.domain.models.user import User
 from app.domain.models.session_models.surprise import Surprise, SurpriseStatus
 from app.infra.repositories.session_repositories.surprise_repo import SurpriseRepository
 from app.application.services.domain_services.helpers import _get_plan, _get_partner
-from app.infra.storage.storage_service import get_presigned_url
+from app.infra.storage.storage_service import get_presigned_url, upload_file
 
 
 class SurpriseService:
@@ -26,7 +31,10 @@ class SurpriseService:
         self.repo = SurpriseRepository(db)
 
     async def create(
-        self, user: User, payload: SurpriseCreateRequest
+        self,
+        user: User,
+        payload: SurpriseCreateRequest,
+        file: UploadFile | None = None,
     ) -> SurpriseResponse:
         if not user.couple_id:
             raise CoupleRequiredError()
@@ -59,6 +67,10 @@ class SurpriseService:
             unlocks_at=payload.unlocks_at,
             opened_at=None,
         )
+
+        if file:
+            s3_key, _ = await upload_file(file, user.couple_id, "surprise")
+            surprise.media_s3_key = s3_key
 
         self.db.add(surprise)
         await self.db.flush()
@@ -93,6 +105,28 @@ class SurpriseService:
 
         return self._to_response(surprise, user)
 
+    async def update(
+        self,
+        user: User,
+        surprise_id: UUID,
+        payload: SurpriseUpdateRequest,
+    ) -> SurpriseResponse:
+        surprise = await self.db.get(Surprise, surprise_id)
+        if not surprise:
+            raise NotFoundError("Surpresa")
+        if surprise.sender_id != user.id:
+            raise ForbiddenError("Apenas o remetente pode editar esta surpresa.")
+        if surprise.status == SurpriseStatus.OPENED:
+            raise ForbiddenError("Não é possível editar uma surpresa já aberta.")
+
+        if payload.title is not None:
+            surprise.title = payload.title
+        if payload.message is not None:
+            surprise.message = payload.message
+
+        await self.db.flush()
+        return self._to_response(surprise, user)
+
     async def get_surprise(self, user: User, surprise_id: UUID) -> SurpriseResponse:
         surprise = await self.db.get(Surprise, surprise_id)
         if not surprise:
@@ -106,18 +140,25 @@ class SurpriseService:
         self,
         user: User,
         *,
+        status: SurpriseStatus | None = None,
         page: int = 1,
         page_size: int = 20,
     ) -> PaginatedResponse[SurpriseResponse]:
         if not user.couple_id:
             raise CoupleRequiredError()
 
+        filters = [Surprise.couple_id == user.couple_id]
+        if status:
+            filters.append(Surprise.status == status)
+
         offset = (page - 1) * page_size
-        items, total = await self.repo.get_for_couple(
-            couple_id=user.couple_id,
+        items = await self.repo.get_all(
+            filters=filters,
+            order_by=Surprise.created_at.desc(),
             limit=page_size,
             offset=offset,
         )
+        total = await self.repo.count(*filters)
 
         return PaginatedResponse(
             items=[self._to_response(s, user) for s in items],
