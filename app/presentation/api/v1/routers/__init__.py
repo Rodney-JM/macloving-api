@@ -11,6 +11,9 @@ from app.presentation.api.v1.routers.night import router as night_router
 from app.presentation.api.v1.routers.ritual import router as ritual_router
 from app.presentation.api.v1.routers.surprise import router as surprise_router
 from app.presentation.api.v1.routers.special_date import router as special_date_router
+from app.presentation.api.v1.routers.letter import router as letter_router
+from app.presentation.api.v1.routers.watch import router as watch_router
+from app.presentation.api.v1.routers.mood import router as mood_router
 
 v1_router = APIRouter()
 
@@ -26,5 +29,8 @@ v1_router.include_router(night_router)
 v1_router.include_router(ritual_router)
 v1_router.include_router(surprise_router)
 v1_router.include_router(special_date_router)
+v1_router.include_router(letter_router)
+v1_router.include_router(watch_router)
+v1_router.include_router(mood_router)
 
 __all__ = ["v1_router"]
